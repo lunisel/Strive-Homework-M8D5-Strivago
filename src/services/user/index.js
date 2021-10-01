@@ -7,7 +7,7 @@ import { JWTAuthenticate } from '../../auth/tools.js'
 
 const UsersRouter = express.Router()
 
-UsersRouter.get('/', async (req, res, next) => {
+UsersRouter.get('/',JWTMiddleware, async (req, res, next) => {
   try {
     const users = await UserModel.find()
 
@@ -40,7 +40,9 @@ UsersRouter.post('/register', async (req, res, next) => {
 
 UsersRouter.get('/me/accommodation', JWTMiddleware, async (req, res, next) => {
   try {
-    res.send(req.user)
+
+    const UsersAccomodations = await AccommodationModel.find({host:req.user})
+    res.send(UsersAccomodations)
   } catch (error) {
     next(error)
   }
