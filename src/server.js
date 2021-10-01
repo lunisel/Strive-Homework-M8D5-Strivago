@@ -11,5 +11,14 @@ const server = express();
 server.use(cors());
 server.use(express.json());
 
-server.listen(port, () => console.log(`Server is running on port ${port}`));
-server.on("error", (error) => console.log(`Server faild : ${error}`));
+server.listen(port, async () => {
+  try {
+    mongoose.connect(mongoConnection, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
+    console.log(`Server is running on port ${port} and is connected to db`);
+  } catch (err) {
+    console.log("Db connection is faild", err);
+  }
+});
