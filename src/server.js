@@ -1,3 +1,4 @@
+
 import express from 'express'
 import cors from 'cors'
 import mongoose from 'mongoose'
@@ -7,6 +8,7 @@ import {
   catchAllHandler,
 } from './errorHandlers.js'
 import usersRouter from './services/user/index.js'
+
 
 const port = process.env.PORT
 
@@ -24,6 +26,7 @@ server.use('/users', usersRouter)
 server.use(unauthorizedHandler)
 server.use(forbiddenHandler)
 server.use(catchAllHandler)
+
 
 server.listen(port, async () => {
   try {
