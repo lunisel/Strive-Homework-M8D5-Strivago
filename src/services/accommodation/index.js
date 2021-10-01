@@ -60,14 +60,14 @@ accommodationRouter.put('/:accommodationId', async (req, res, next)=> {
 
 
 
-// accommodationRouter.delete(('/:accommodationId', async (req, res, next)=>{
-//     try {
-//         const deletedAccommodation = await AccommodationModel.findByIdAndDelete(req.params.accommodationId)
-//         res.status(200).send('Accommodation deleted!', deletedAccommodation)
-//     } catch (error) {
-//         next(error)
-//     }
-// }))
+accommodationRouter.delete('/:accommodationId', async (req, res, next)=>{
+    try {
+        await AccommodationModel.findByIdAndRemove(req.params.accommodationId)
+        res.json({ message: "Deleted" })
+    } catch (error) {
+        next(error)
+    }
+})
 
 
 
