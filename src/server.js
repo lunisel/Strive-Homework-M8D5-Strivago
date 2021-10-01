@@ -1,7 +1,12 @@
 import express from 'express'
 import cors from 'cors'
 import mongoose from 'mongoose'
-import { errorsHandlers } from './errorHandlers.js'
+import {
+  unauthorizedHandler,
+  forbiddenHandler,
+  catchAllHandler,
+} from './errorHandlers.js'
+import usersRouter from './services/user/index.js'
 
 const port = process.env.PORT
 
@@ -16,7 +21,9 @@ server.use(express.json())
 server.use('/users', usersRouter)
 
 // ERROR MIDDLEWARES
-server.use(errorsHandlers)
+server.use(unauthorizedHandler)
+server.use(forbiddenHandler)
+server.use(catchAllHandler)
 
 server.listen(port, async () => {
   try {
