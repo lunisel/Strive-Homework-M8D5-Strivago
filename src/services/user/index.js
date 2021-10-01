@@ -39,7 +39,6 @@ UsersRouter.post('/register', async (req, res, next) => {
 })
 
 UsersRouter.get('/me/accommodation', JWTMiddleware, async (req, res, next) => {
-  // JWTAuthMiddleware is going also to modify req object and attach the "logged in" user to it --> req.user
   try {
     res.send(req.user)
   } catch (error) {
@@ -51,18 +50,13 @@ UsersRouter.post('/login', async (req, res, next) => {
   try {
     const { email, password } = req.body
 
-    // 1. Verify credentials
-
     const user = await UserModel.checkCredentials(email, password)
-    console.log('USER ON INDEX FROM U¡SR', user)
+
     if (user) {
-      // 2. If everything is ok we are going to generate an access token
       const { accessToken, refreshToken } = await JWTAuthenticate(user)
-      console.log('refreshToken HEEEERE', refreshToken)
-      // 3. Send token back as a response
+
       res.send({ accessToken, refreshToken })
     } else {
-      // 4. If credentials are not ok we are sending an error (401)
       next(createHttpError(401, 'Credentials are not ok!'))
     }
   } catch (error) {
