@@ -20,6 +20,7 @@ const UserSchema = new mongoose.Schema({
     required: true,
     enum: ['host', 'guest'],
   },
+  refreshToken: { type: String },
 })
 
 UserSchema.pre('save', async function (next) {
@@ -33,11 +34,11 @@ UserSchema.pre('save', async function (next) {
   next()
 })
 
-UserSchema.statics.checkCredentials = async function (email, plainText) {
+UserSchema.statics.checkCredentials = async function (email, plainPW) {
   const user = await this.findOne({ email })
   if (user) {
     const hashedPassword = user.password
-    const isMatch = await bcrypt.compare(plainText, hashedPassword)
+    const isMatch = await bcrypt.compare(plainPW, hashedPassword)
     if (isMatch) return user
     else return null
   } else {
