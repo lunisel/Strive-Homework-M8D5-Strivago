@@ -1,11 +1,12 @@
 import jwt from 'jsonwebtoken'
-import UserModel from '../services/user/schema.js'
+import UserModel from '../services/user/schema'
+import { UserInt } from "../services/user/index"
 
-const generateJWT = (payload) =>
+const generateJWT = (payload:string) =>
   new Promise((resolve, reject) =>
     jwt.sign(
       payload,
-      process.env.JWT_SECRET,
+      process.env.JWT_SECRET!,
       { expiresIn: '1h' },
       (err, token) => {
         if (err) reject(err)
@@ -14,11 +15,11 @@ const generateJWT = (payload) =>
     )
   )
 
-const generateRefreshJWT = (payload) =>
+const generateRefreshJWT = (payload:string) =>
   new Promise((resolve, reject) =>
     jwt.sign(
       payload,
-      process.env.JWT_REFRESH_SECRET,
+      process.env.JWT_REFRESH_SECRET!,
       { expiresIn: '1 week' },
       (err, token) => {
         if (err) reject(err)
@@ -27,23 +28,23 @@ const generateRefreshJWT = (payload) =>
     )
   )
 
-export const verifyJWT = (token) =>
+export const verifyJWT = (token:string) =>
   new Promise((resolve, reject) =>
-    jwt.verify(token, process.env.JWT_SECRET, (err, decodedToken) => {
+    jwt.verify(token, process.env.JWT_SECRET!, (err, decodedToken) => {
       if (err) reject(err)
       resolve(decodedToken)
     })
   )
 
-export const verifyRefreshJWT = (token) =>
+export const verifyRefreshJWT = (token:string) =>
   new Promise((resolve, reject) =>
-    jwt.verify(token, process.env.JWT_REFRESH_SECRET, (err, decodedToken) => {
+    jwt.verify(token, process.env.JWT_REFRESH_SECRET!, (err, decodedToken) => {
       if (err) reject(err)
       resolve(decodedToken)
     })
   )
 
-export const JWTAuthenticate = async (user) => {
+export const JWTAuthenticate = async (user: UserInt) => {
   console.log('user HEEEERE', user)
   const accessToken = await generateJWT({ _id: user._id })
   const refreshToken = await generateRefreshJWT({ _id: user._id })
@@ -55,9 +56,9 @@ export const JWTAuthenticate = async (user) => {
   return { accessToken, refreshToken }
 }
 
-export const refreshTokens = async (actualRefreshToken) => {
+export const refreshTokens = async (actualRefreshToken:string) => {
   try {
-    const decodedRefreshToken = await verifyRefreshJWT(actualRefreshToken)
+    const decodedRefreshToken: = await verifyRefreshJWT(actualRefreshToken)
 
     const user = await UserModel.findById(decodedRefreshToken._id)
 
